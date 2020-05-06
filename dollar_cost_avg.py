@@ -28,8 +28,8 @@ def BuyOnceWeekly(data, weekday):
     totalshares = 0
     for date_str, closeprice in zip(data['Date'], data['Close']):
         oneday = datetime.strptime(date_str, '%Y-%m-%d').date()
+        # 0 is Monday, 6 is Sunday
         if oneday.weekday() == weekday:
-            #print('{}: {:.2f}'.format(oneday, closeprice))
             totalcost += closeprice
             totalshares += 1
     print('Buy 1 share Every {}, {} shares, Avg Cost: {:.2f}'.format(calendar.day_name[weekday], totalshares, totalcost/totalshares))
@@ -43,7 +43,6 @@ def BuyOnceDaily(data):
     print('Buy 1 share Every day, {} shares, Avg Cost: {:.2f}'.format(totalshares, totalcost/totalshares))
 
 def BuyOnceMonthly(data):
-    #totalcost_last_day = 0.0
     totalcost_1st_day = 0.0
     totalshares = 0
     last_month = datetime.strptime(data['Date'][0], '%Y-%m-%d').date().month
@@ -52,23 +51,19 @@ def BuyOnceMonthly(data):
         oneday = datetime.strptime(date_str, '%Y-%m-%d').date()
         if oneday.year > last_year or oneday.month > last_month:
             totalcost_1st_day += closeprice
-            #totalcost_last_day += yesterdayprice
             totalshares += 1
-            #print('{}: {:.2f}'.format(oneday, closeprice))
         yesterdayprice = closeprice
         last_month = oneday.month
         last_year = oneday.year
-    #print('Buy 1 share Every Month last day, {} shares, Avg Cost: {:.2f}'.format(totalshares, totalcost_last_day/totalshares))
     print('Buy 1 share Every Month 1st day, {} shares, Avg Cost: {:.2f}'.format(totalshares, totalcost_1st_day/totalshares))
             
 def main():
-    # 0 is Monday, 6 is Sunday
     ticker    = 'SPY'
-    for startyear in range(1980,2000):
+    for startyear in range(1980,1981):
         d1 = datetime(startyear, 1, 1)
         startdate = d1.strftime('%Y-%m-%d')
-        d1 = datetime(startyear+20, 12, 30)
-        enddate   = d1.strftime('%Y-%m-%d')
+        d2 = datetime(startyear+20, 12, 30)
+        enddate   = d2.strftime('%Y-%m-%d')
         print('Study {} from {} to {}'.format(ticker, startdate, enddate))
         data = GetData(ticker, startdate, enddate)
         for i in range(0,5):
